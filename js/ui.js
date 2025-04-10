@@ -1,4 +1,4 @@
-import domElements from './dom.js';
+// Functions for UI interaction
 
 // Validation functions
 function validateYearInput(input) {

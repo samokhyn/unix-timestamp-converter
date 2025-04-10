@@ -66,9 +66,3 @@
 [data-theme="dark"] #light-icon {
     display: block;
 }
-
-#timestamp {
-    transition: background-color 0.5s ease;
-}
-
-}
