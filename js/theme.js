@@ -1,5 +1,3 @@
-import domElements from './dom.js';
-
 // Functions for theme management
 function setTheme(theme) {
     document.body.setAttribute('data-theme', theme);
@@ -33,9 +31,6 @@ function initTheme() {
                 setTheme(e.matches ? 'dark' : 'light');
             }
         });
-        
-    // Initialize button state if needed, for example, to reflect the current theme
-    // domElements.themeToggleBtn.checked = document.body.getAttribute('data-theme') === 'dark';
 }
 
 export { setTheme, toggleTheme, initTheme };

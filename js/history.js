@@ -1,5 +1,5 @@
 // Functions for working with conversion history
-import domElements from './dom.js';
+
 const HISTORY_KEY = 'unix_converter_history';
 const MAX_HISTORY_ITEMS = 3; // Limit to 3 conversions
 
@@ -51,7 +51,7 @@ export function addToHistory(conversionData) {
  * @param {HTMLElement} historyList History list element
  */
 export function renderHistory(historyList) {
-    const history = getConversionHistory()
+    const history = getConversionHistory();
     
     // Clear history list
     historyList.innerHTML = '';
