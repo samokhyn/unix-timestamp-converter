@@ -9,7 +9,6 @@ import {
 import {
     updateFromTimestamp,
     updateFromDateInputs,
-    setCurrentTime,
     handleTimestampFormatChange,
     copyTimestampToClipboard,
     copyFormattedDate,
@@ -31,211 +30,187 @@ import {
     renderHistory
 } from './history.js';
 
+import domElements from './dom.js';
+
 // Инициализация приложения при загрузке DOM
 document.addEventListener('DOMContentLoaded', function() {
-    // Получаем ссылки на DOM элементы
-    const timestampInput = document.getElementById('timestamp');
-    const yearInput = document.getElementById('year');
-    const monthInput = document.getElementById('month');
-    const dayInput = document.getElementById('day');
-    const hoursInput = document.getElementById('hours');
-    const minutesInput = document.getElementById('minutes');
-    const secondsInput = document.getElementById('seconds');
-    const copyTimestampBtn = document.getElementById('copy-timestamp-btn');
-    const copyDateBtn = document.getElementById('copy-date-btn');
-    const dateFormatSelect = document.getElementById('date-format-select');
-    const timestampFormatSelect = document.getElementById('timestamp-format-select');
-    const nowBtn = document.getElementById('now-btn');
-    const themeToggleBtn = document.getElementById('theme-toggle-btn');
-    const timezoneSelect = document.getElementById('timezone-select');
-    const timezoneToggle = document.getElementById('timezone-toggle');
-    const utcBtn = document.getElementById('utc-btn');
-    const localBtn = document.getElementById('local-btn');
-    const customBtn = document.getElementById('custom-btn');
-    const copyNotification = document.getElementById('copy-notification');
-    const livePreviewElement = document.getElementById('live-preview');
-    const historyList = document.getElementById('history-list');
-    
     // Array of date/time fields for convenience
-    const dateTimeFields = [yearInput, monthInput, dayInput, hoursInput, minutesInput, secondsInput];
-    
+    const dateTimeFields = [domElements.yearInput, domElements.monthInput, domElements.dayInput, domElements.hoursInput, domElements.minutesInput, domElements.secondsInput];
+
     // Add event listeners for validation
-    yearInput.addEventListener('blur', () => validateYearInput(yearInput));
-    monthInput.addEventListener('blur', () => validateMonthInput(monthInput));
-    dayInput.addEventListener('blur', () => validateDayInput(dayInput));
-    hoursInput.addEventListener('blur', () => validateHoursInput(hoursInput));
-    minutesInput.addEventListener('blur', () => validateMinutesInput(minutesInput));
-    secondsInput.addEventListener('blur', () => validateSecondsInput(secondsInput));
-    timestampInput.addEventListener('blur', () => validateTimestampInput(timestampInput));
+    domElements.yearInput.addEventListener('blur', () => validateYearInput(domElements.yearInput));
+    domElements.monthInput.addEventListener('blur', () => validateMonthInput(domElements.monthInput));
+    domElements.dayInput.addEventListener('blur', () => validateDayInput(domElements.dayInput));
+    domElements.hoursInput.addEventListener('blur', () => validateHoursInput(domElements.hoursInput));
+    domElements.minutesInput.addEventListener('blur', () => validateMinutesInput(domElements.minutesInput));
+    domElements.secondsInput.addEventListener('blur', () => validateSecondsInput(domElements.secondsInput));
+    domElements.timestampInput.addEventListener('blur', () => validateTimestampInput(domElements.timestampInput));
+
+    // Set initial timezone offset based on system
+    domElements.timezoneSelect.value = getLocalTimezoneOffset();
     
     // Add event listeners for input changes
-    yearInput.addEventListener('input', updateFromDateTimeFields);
-    monthInput.addEventListener('input', updateFromDateTimeFields);
-    dayInput.addEventListener('input', updateFromDateTimeFields);
-    hoursInput.addEventListener('input', updateFromDateTimeFields);
-    minutesInput.addEventListener('input', updateFromDateTimeFields);
-    secondsInput.addEventListener('input', updateFromDateTimeFields);
-    timestampInput.addEventListener('input', updateFromTimestampField);
+    dateTimeFields.forEach(field => field.addEventListener('input', updateFromDateTimeFields));
+    domElements.timestampInput.addEventListener('input', updateFromTimestampField);
     
     // Add event listeners for buttons
-    copyTimestampBtn.addEventListener('click', () => {
-        copyTimestampToClipboard(timestampInput, copyNotification);
+    domElements.copyTimestampBtn.addEventListener('click', () => {
+        copyTimestampToClipboard(domElements.timestampInput, domElements.copyNotification);
     });
-    
-    copyDateBtn.addEventListener('click', () => {
+
+    domElements.copyDateBtn.addEventListener('click', () => {
         const formattedDate = copyFormattedDate(
-            yearInput, 
-            monthInput, 
-            dayInput, 
-            hoursInput, 
-            minutesInput, 
-            secondsInput, 
-            dateFormatSelect, 
-            timezoneSelect, 
-            copyNotification
+            domElements.yearInput,
+            domElements.monthInput,
+            domElements.dayInput,
+            domElements.hoursInput,
+            domElements.minutesInput,
+            domElements.secondsInput,
+            domElements.dateFormatSelect,
+            domElements.timezoneSelect,
+            domElements.copyNotification
         );
-        
+
         // Добавляем в историю
         if (formattedDate) {
             addToHistory({
-                timestamp: timestampInput.value,
+                timestamp: domElements.timestampInput.value,
                 date: formattedDate
             });
         }
     });
-    
-    nowBtn.addEventListener('click', () => {
-        setCurrentTime(timestampInput, timestampFormatSelect, updateFromTimestampField);
-        
+
+    domElements.nowBtn.addEventListener('click', () => {
+        updateFromTimestampField();
+
         // Добавляем анимацию нажатия
-        nowBtn.classList.add('active');
+        domElements.nowBtn.classList.add('active');
         setTimeout(() => {
-            nowBtn.classList.remove('active');
+            domElements.nowBtn.classList.remove('active');
         }, 200);
     });
-    
-    themeToggleBtn.addEventListener('click', toggleTheme);
-    
+
+    domElements.themeToggleBtn.addEventListener('click', toggleTheme);
+
     // Add event listeners for timezone options
-    utcBtn.addEventListener('click', () => {
+    domElements.utcBtn.addEventListener('click', () => {
         setTimezoneToggle(
-            'utc', 
-            timezoneToggle,
-            utcBtn, 
-            localBtn, 
-            customBtn,
-            timezoneSelect, 
+            'utc',
+            domElements.timezoneToggle,
+            domElements.utcBtn,
+            domElements.localBtn,
+            domElements.customBtn,
+            domElements.timezoneSelect,
             updateFromTimestampField
         );
     });
-    
-    localBtn.addEventListener('click', () => {
+
+    domElements.localBtn.addEventListener('click', () => {
         setTimezoneToggle(
-            'local', 
-            timezoneToggle,
-            utcBtn, 
-            localBtn, 
-            customBtn,
-            timezoneSelect, 
+            'local',
+            domElements.timezoneToggle,
+            domElements.utcBtn,
+            domElements.localBtn,
+            domElements.customBtn,
+            domElements.timezoneSelect,
             updateFromTimestampField
         );
     });
-    
-    customBtn.addEventListener('click', () => {
+
+    domElements.customBtn.addEventListener('click', () => {
         setTimezoneToggle(
-            'custom', 
-            timezoneToggle,
-            utcBtn, 
-            localBtn, 
-            customBtn,
-            timezoneSelect, 
+            'custom',
+            domElements.timezoneToggle,
+            domElements.utcBtn,
+            domElements.localBtn,
+            domElements.customBtn,
+            domElements.timezoneSelect,
             updateFromTimestampField
         );
     });
-    
-    timezoneSelect.addEventListener('change', () => {
+
+    domElements.timezoneSelect.addEventListener('change', () => {
         handleTimezoneChange(
-            timezoneSelect, 
-            timezoneToggle,
-            utcBtn, 
-            localBtn, 
-            customBtn,
-            updateFromTimestampField, 
+            domElements.timezoneSelect,
+            domElements.timezoneToggle,
+            domElements.utcBtn,
+            domElements.localBtn,
+            domElements.customBtn,
+            updateFromTimestampField,
             dateTimeFields
         );
     });
-    
+
     // Обработчик клика на элемент истории
-    historyList.addEventListener('click', (event) => {
+    domElements.historyList.addEventListener('click', (event) => {
         const historyItem = event.target.closest('.history-item');
         if (historyItem && historyItem.dataset.timestamp) {
             // Устанавливаем значение из истории
-            timestampInput.value = historyItem.dataset.timestamp;
+            domElements.timestampInput.value = historyItem.dataset.timestamp;
             updateFromTimestampField();
         }
     });
-    
+
     // Add event listener for timestamp format
-    timestampFormatSelect.addEventListener('change', () => {
+    domElements.timestampFormatSelect.addEventListener('change', () => {
         handleTimestampFormatChange(
-            timestampFormatSelect, 
-            timestampInput, 
+            domElements.timestampFormatSelect,
+            domElements.timestampInput,
             updateFromTimestampField
         );
     });
-    
+
     // Handler for date format change
-    dateFormatSelect.addEventListener('change', () => {
+    domElements.dateFormatSelect.addEventListener('change', () => {
         // Update live preview when date format changes
         updateFromTimestampField();
     });
-    
+
     // Обработчики изменения полей даты
     dateTimeFields.forEach(field => {
         field.addEventListener('input', () => {
             updateFromDateTimeFields();
-            
+
             // Прямое обновление живого предпросмотра
-            if (livePreviewElement) {
+            if (domElements.livePreviewElement) {
                 setTimeout(() => {
                     // Получаем текущую дату из полей
-                    const year = parseInt(yearInput.value);
-                    const month = parseInt(monthInput.value) - 1;
-                    const day = parseInt(dayInput.value);
-                    const hours = parseInt(hoursInput.value);
-                    const minutes = parseInt(minutesInput.value);
-                    const seconds = parseInt(secondsInput.value);
-                    
-                    if (!isNaN(year) && !isNaN(month) && !isNaN(day) && 
+                    const year = parseInt(domElements.yearInput.value);
+                    const month = parseInt(domElements.monthInput.value) - 1;
+                    const day = parseInt(domElements.dayInput.value);
+                    const hours = parseInt(domElements.hoursInput.value);
+                    const minutes = parseInt(domElements.minutesInput.value);
+                    const seconds = parseInt(domElements.secondsInput.value);
+
+                    if (!isNaN(year) && !isNaN(month) && !isNaN(day) &&
                         !isNaN(hours) && !isNaN(minutes) && !isNaN(seconds)) {
-                        
+
                         // Создаем дату
-                        const timezone = timezoneSelect.value;
+                        const timezone = domElements.timezoneSelect.value;
                         let date;
-                        
+
                         if (timezone === '+00:00') {
                             date = new Date(Date.UTC(year, month, day, hours, minutes, seconds));
                         } else {
                             // Создаем дату с учетом часового пояса
                             const offsetMatch = timezone.match(/([+-])(\d{2}):(\d{2})/);
                             if (offsetMatch) {
-                                const sign = offsetMatch[1];
-                                const offsetHours = parseInt(offsetMatch[2]);
-                                const offsetMinutes = parseInt(offsetMatch[3]);
-                                const totalOffsetMinutes = (sign === '+' ? -1 : 1) * (offsetHours * 60 + offsetMinutes);
-                                
-                                const localDate = new Date(Date.UTC(year, month, day, hours, minutes, seconds));
-                                date = new Date(localDate.getTime() + totalOffsetMinutes * 60000);
-                            } else {
-                                date = new Date(Date.UTC(year, month, day, hours, minutes, seconds));
-                            }
+                              const sign = offsetMatch[1];
+                              const offsetHours = parseInt(offsetMatch[2]);
+                              const offsetMinutes = parseInt(offsetMatch[3]);
+                              const totalOffsetMinutes = (sign === '+' ? -1 : 1) * (offsetHours * 60 + offsetMinutes);
+
+                              const localDate = new Date(Date.UTC(year, month, day, hours, minutes, seconds));
+                              date = new Date(localDate.getTime() + totalOffsetMinutes * 60000);
+                          } else {
+                              date = new Date(Date.UTC(year, month, day, hours, minutes, seconds));
+                          }
                         }
-                        
+
                         // Format date for preview
-                        const dateFormatSelect = document.getElementById('date-format-select');
-                        const format = dateFormatSelect.value;
+                        const format = domElements.dateFormatSelect.value;
                         let formattedDate;
-                        
+
                         switch (format) {
                             case 'iso':
                                 formattedDate = date.toISOString();
@@ -258,20 +233,21 @@ document.addEventListener('DOMContentLoaded', function() {
                             default:
                                 formattedDate = date.toISOString();
                         }
-                        
+
                         // Обновляем предпросмотр
-                        livePreviewElement.textContent = formattedDate;
-                        
+                        domElements.livePreviewElement.textContent = formattedDate;
+
                         // Добавляем анимацию пульсации
-                        livePreviewElement.classList.remove('pulse-animation');
-                        void livePreviewElement.offsetWidth; // Trick to restart animation
-                        livePreviewElement.classList.add('pulse-animation');
+                        domElements.livePreviewElement.classList.remove('pulse-animation');
+                        void domElements.livePreviewElement.offsetWidth; // Trick to restart animation
+                        domElements.livePreviewElement.classList.add('pulse-animation');
                     }
                 }, 10); // Небольшая задержка, чтобы убедиться, что значение таймстемпа обновлено
             }
         });
     });
-    
+
+
     // Wrapper function for updating from timestamp
     function updateFromTimestampField() {
         updateFromTimestamp(
@@ -282,74 +258,73 @@ document.addEventListener('DOMContentLoaded', function() {
             hoursInput, 
             minutesInput, 
             secondsInput, 
-            timezoneSelect,
-            livePreviewElement
+            domElements.timezoneSelect,
+            domElements.livePreviewElement
         );
-        
+
         // Add to history on each update from timestamp
-        if (timestampInput.value) {
+        if (domElements.timestampInput.value) {
             // Get formatted date for history
-            const year = yearInput.value;
-            const month = monthInput.value.padStart(2, '0');
-            const day = dayInput.value.padStart(2, '0');
-            const hours = hoursInput.value.padStart(2, '0');
-            const minutes = minutesInput.value.padStart(2, '0');
-            const seconds = secondsInput.value.padStart(2, '0');
+            const year = domElements.yearInput.value;
+            const month = domElements.monthInput.value.padStart(2, '0');
+            const day = domElements.dayInput.value.padStart(2, '0');
+            const hours = domElements.hoursInput.value.padStart(2, '0');
+            const minutes = domElements.minutesInput.value.padStart(2, '0');
+            const seconds = domElements.secondsInput.value.padStart(2, '0');
             const formattedDate = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
-            
+
             addToHistory({
-                timestamp: timestampInput.value,
+                timestamp: domElements.timestampInput.value,
                 date: formattedDate
             });
-            
+
             // Обновляем отображение истории
-            renderHistory(historyList);
+            renderHistory(domElements.historyList);
         }
     }
-    
+
     // Wrapper function for updating from date/time fields
     function updateFromDateTimeFields() {
         updateFromDateInputs(
-            yearInput, 
-            monthInput, 
-            dayInput, 
-            hoursInput, 
-            minutesInput, 
-            secondsInput, 
-            timestampInput, 
-            timestampFormatSelect, 
-            timezoneSelect
+            domElements.yearInput,
+            domElements.monthInput,
+            domElements.dayInput,
+            domElements.hoursInput,
+            domElements.minutesInput,
+            domElements.secondsInput,
+            domElements.timestampInput,
+            domElements.timestampFormatSelect,
+            domElements.timezoneSelect
         );
-        
+
         // Обновляем живой предпросмотр после изменения полей даты
-        if (livePreviewElement) {
-            const dateFormatSelect = document.getElementById('date-format-select');
-            const timestamp = parseInt(timestampInput.value);
+        if (domElements.livePreviewElement) {
+            const timestamp = parseInt(domElements.timestampInput.value);
             if (!isNaN(timestamp)) {
                 const date = new Date(timestamp * 1000);
-                const timezone = getSelectedTimezone(timezoneSelect);
-                const previewText = formatDateForPreview(date, timezone, dateFormatSelect);
-                livePreviewElement.textContent = previewText;
-                
+                const timezone = getSelectedTimezone(domElements.timezoneSelect);
+                const previewText = formatDateForPreview(date, timezone, domElements.dateFormatSelect);
+                domElements.livePreviewElement.textContent = previewText;
+
                 // Добавляем анимацию пульсации
-                livePreviewElement.classList.remove('pulse-animation');
-                void livePreviewElement.offsetWidth; // Trick to restart animation
-                livePreviewElement.classList.add('pulse-animation');
+                domElements.livePreviewElement.classList.remove('pulse-animation');
+                void domElements.livePreviewElement.offsetWidth; // Trick to restart animation
+                domElements.livePreviewElement.classList.add('pulse-animation');
             }
         }
     }
-    
+
     // Инициализируем приложение
     initTheme();
-    
+
     // Инициализируем переключатель часового пояса в положение UTC по умолчанию
-    setTimezoneToggle('utc', timezoneToggle, utcBtn, localBtn, customBtn, timezoneSelect, null);
-    
+    setTimezoneToggle('utc', domElements.timezoneToggle, domElements.utcBtn, domElements.localBtn, domElements.customBtn, domElements.timezoneSelect, null);
+
     updateFromTimestampField();
-    
+
     // Отображаем историю при загрузке
-    renderHistory(historyList);
-    
+    renderHistory(domElements.historyList);
+
     // Устанавливаем часовой пояс по умолчанию UTC
-    setTimezoneToggle('utc', timezoneToggle, utcBtn, localBtn, customBtn, timezoneSelect, updateFromTimestampField);
+    setTimezoneToggle('utc', domElements.timezoneToggle, domElements.utcBtn, domElements.localBtn, domElements.customBtn, domElements.timezoneSelect, updateFromTimestampField);
 });
