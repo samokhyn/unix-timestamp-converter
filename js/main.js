@@ -56,10 +56,10 @@ document.addEventListener('DOMContentLoaded', function() {
     const livePreviewElement = document.getElementById('live-preview');
     const historyList = document.getElementById('history-list');
     
-    // Массив полей даты/времени для удобства
+    // Array of date/time fields for convenience
     const dateTimeFields = [yearInput, monthInput, dayInput, hoursInput, minutesInput, secondsInput];
     
-    // Добавляем слушатели событий для валидации
+    // Add event listeners for validation
     yearInput.addEventListener('blur', () => validateYearInput(yearInput));
     monthInput.addEventListener('blur', () => validateMonthInput(monthInput));
     dayInput.addEventListener('blur', () => validateDayInput(dayInput));
@@ -68,7 +68,7 @@ document.addEventListener('DOMContentLoaded', function() {
     secondsInput.addEventListener('blur', () => validateSecondsInput(secondsInput));
     timestampInput.addEventListener('blur', () => validateTimestampInput(timestampInput));
     
-    // Добавляем слушатели событий для изменения ввода
+    // Add event listeners for input changes
     yearInput.addEventListener('input', updateFromDateTimeFields);
     monthInput.addEventListener('input', updateFromDateTimeFields);
     dayInput.addEventListener('input', updateFromDateTimeFields);
@@ -77,7 +77,7 @@ document.addEventListener('DOMContentLoaded', function() {
     secondsInput.addEventListener('input', updateFromDateTimeFields);
     timestampInput.addEventListener('input', updateFromTimestampField);
     
-    // Добавляем слушатели событий для кнопок
+    // Add event listeners for buttons
     copyTimestampBtn.addEventListener('click', () => {
         copyTimestampToClipboard(timestampInput, copyNotification);
     });
@@ -116,7 +116,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     themeToggleBtn.addEventListener('click', toggleTheme);
     
-    // Добавляем слушатели событий для опций часового пояса
+    // Add event listeners for timezone options
     utcBtn.addEventListener('click', () => {
         setTimezoneToggle(
             'utc', 
@@ -175,7 +175,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
     
-    // Добавляем слушатель события для формата временной метки
+    // Add event listener for timestamp format
     timestampFormatSelect.addEventListener('change', () => {
         handleTimestampFormatChange(
             timestampFormatSelect, 
@@ -184,9 +184,9 @@ document.addEventListener('DOMContentLoaded', function() {
         );
     });
     
-    // Обработчик изменения формата даты
+    // Handler for date format change
     dateFormatSelect.addEventListener('change', () => {
-        // Обновляем живой предпросмотр при изменении формата даты
+        // Update live preview when date format changes
         updateFromTimestampField();
     });
     
@@ -231,7 +231,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             }
                         }
                         
-                        // Форматируем дату для предпросмотра
+                        // Format date for preview
                         const dateFormatSelect = document.getElementById('date-format-select');
                         const format = dateFormatSelect.value;
                         let formattedDate;
@@ -272,7 +272,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
     
-    // Функция-обертка для обновления из временной метки
+    // Wrapper function for updating from timestamp
     function updateFromTimestampField() {
         updateFromTimestamp(
             timestampInput, 
@@ -286,9 +286,9 @@ document.addEventListener('DOMContentLoaded', function() {
             livePreviewElement
         );
         
-        // Добавляем в историю при каждом обновлении из временной метки
+        // Add to history on each update from timestamp
         if (timestampInput.value) {
-            // Получаем форматированную дату для истории
+            // Get formatted date for history
             const year = yearInput.value;
             const month = monthInput.value.padStart(2, '0');
             const day = dayInput.value.padStart(2, '0');
@@ -307,7 +307,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
     
-    // Функция-обертка для обновления из полей даты/времени
+    // Wrapper function for updating from date/time fields
     function updateFromDateTimeFields() {
         updateFromDateInputs(
             yearInput, 

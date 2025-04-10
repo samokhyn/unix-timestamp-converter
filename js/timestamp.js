@@ -1,7 +1,7 @@
 // Функции для работы с временными метками
 import { getSelectedTimezone, getOffsetMillisFromString } from './timezone.js';
 
-// Функция для форматирования даты в соответствии с выбранным форматом для живого предпросмотра
+// Function to format date according to the selected format for live preview
 export function formatDateForPreview(date, timezone, dateFormatSelect) {
     let formattedDate;
     let adjustedDate;
@@ -16,16 +16,16 @@ export function formatDateForPreview(date, timezone, dateFormatSelect) {
         adjustedDate = new Date(date.getTime() + offsetMillis);
     }
     
-    // Форматируем дату в соответствии с выбранным форматом
+    // Format date according to the selected format
     const format = dateFormatSelect ? dateFormatSelect.value : 'iso';
     
     switch (format) {
         case 'iso':
-            // ISO 8601 формат
+            // ISO 8601 format
             formattedDate = adjustedDate.toISOString();
             break;
         case 'human':
-            // Человекочитаемый формат
+            // Human readable format
             const year = adjustedDate.getUTCFullYear();
             const month = adjustedDate.getUTCMonth() + 1;
             const day = adjustedDate.getUTCDate();
@@ -35,15 +35,15 @@ export function formatDateForPreview(date, timezone, dateFormatSelect) {
             formattedDate = `${year}-${month.toString().padStart(2, '0')}-${day.toString().padStart(2, '0')} ${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
             break;
         case 'utc':
-            // UTC String формат
+            // UTC String format
             formattedDate = adjustedDate.toUTCString();
             break;
         case 'locale':
-            // Locale String формат
+            // Locale String format
             formattedDate = adjustedDate.toLocaleString();
             break;
         default:
-            // По умолчанию - человекочитаемый формат
+            // Default - human readable format
             const y = adjustedDate.getUTCFullYear();
             const mo = adjustedDate.getUTCMonth() + 1;
             const d = adjustedDate.getUTCDate();
@@ -115,7 +115,7 @@ function updateFromTimestamp(
             
             // Обновляем живой предпросмотр, если элемент передан
             if (livePreviewElement) {
-                // Получаем ссылку на выпадающий список формата даты
+                // Get reference to date format dropdown
                 const dateFormatSelect = document.getElementById('date-format-select');
                 const previewText = formatDateForPreview(date, timezone, dateFormatSelect);
                 livePreviewElement.textContent = previewText;
@@ -171,7 +171,7 @@ function updateFromDateInputs(
                 const localDate = new Date(Date.UTC(year, month, day, hours, minutes, seconds));
                 date = new Date(localDate.getTime() + totalOffsetMinutes * 60000);
             } else {
-                // Если не удалось распознать формат, используем UTC
+                // If format couldn't be recognized, use UTC
                 date = new Date(Date.UTC(year, month, day, hours, minutes, seconds));
             }
         }
@@ -212,7 +212,7 @@ function setCurrentTime(timestampInput, timestampFormatSelect, updateCallback) {
     }, 500);
 }
 
-// Обработка изменения формата временной метки (секунды/миллисекунды)
+// Handle timestamp format change (seconds/milliseconds)
 function handleTimestampFormatChange(timestampFormatSelect, timestampInput, updateCallback) {
     const format = timestampFormatSelect.value;
     const timestamp = timestampInput.value.trim();
@@ -248,7 +248,7 @@ function copyTimestampToClipboard(timestampInput, timestampFormatSelect, copyTim
         
         navigator.clipboard.writeText(finalTimestamp).then(() => {
             if (typeof showNotificationCallback === 'function') {
-                showNotificationCallback(`Временная метка скопирована как ${format === 'milliseconds' ? 'миллисекунды' : 'секунды'}!`);
+                showNotificationCallback(`Timestamp copied as ${format === 'milliseconds' ? 'milliseconds' : 'seconds'}!`);
             }
             
             // Показываем индикацию успеха
@@ -266,7 +266,7 @@ function copyTimestampToClipboard(timestampInput, timestampFormatSelect, copyTim
     }
 }
 
-// Получение форматированной даты на основе выбранного формата
+// Get formatted date based on selected format
 function getFormattedDate(yearInput, monthInput, dayInput, hoursInput, minutesInput, secondsInput, timezoneSelect, dateFormatSelect) {
     const date = getCurrentDateFromInputs(yearInput, monthInput, dayInput, hoursInput, minutesInput, secondsInput, timezoneSelect);
     const format = dateFormatSelect.value;
@@ -330,7 +330,7 @@ function getCurrentDateFromInputs(yearInput, monthInput, dayInput, hoursInput, m
     return date;
 }
 
-// Копирование текущего времени в выбранном формате
+// Copy current time in selected format
 function copyFormattedDate(yearInput, monthInput, dayInput, hoursInput, minutesInput, secondsInput, timezoneSelect, dateFormatSelect, copyDateBtn, showNotificationCallback) {
     const formattedDate = getFormattedDate(yearInput, monthInput, dayInput, hoursInput, minutesInput, secondsInput, timezoneSelect, dateFormatSelect);
     const formatName = dateFormatSelect.options[dateFormatSelect.selectedIndex].text;
@@ -340,15 +340,15 @@ function copyFormattedDate(yearInput, monthInput, dayInput, hoursInput, minutesI
         copyDateBtn.classList.add('copied');
         
         if (typeof showNotificationCallback === 'function') {
-            showNotificationCallback(`Формат ${formatName} скопирован!`);
+            showNotificationCallback(`Format ${formatName} copied!`);
         }
         
-        // Убираем индикацию успеха через задержку
+        // Remove success indication after delay
         setTimeout(() => {
             copyDateBtn.classList.remove('copied');
         }, 750);
     }).catch(err => {
-        console.error('Не удалось скопировать форматированную дату:', err);
+        console.error('Failed to copy formatted date:', err);
         copyDateBtn.classList.add('error');
         setTimeout(() => {
             copyDateBtn.classList.remove('error');

@@ -1,6 +1,6 @@
-// Функции для UI взаимодействия
+// Functions for UI interaction
 
-// Функции валидации
+// Validation functions
 function validateYearInput(input) {
     const value = input.value;
     if (value === '') return;
@@ -106,7 +106,7 @@ function validateTimestampInput(input) {
     }
 }
 
-// Вспомогательная функция для добавления нуля к значениям < 10
+// Helper function to add zero to values < 10
 function padZero(num) {
     return num < 10 ? `0${num}` : num;
 }
@@ -119,16 +119,16 @@ function showFeedback(input) {
     }, 300);
 }
 
-// Показать уведомление о копировании
-function showCopyNotification(message = 'Скопировано!', copyNotification) {
+// Show copy notification
+function showCopyNotification(message = 'Copied!', copyNotification) {
     copyNotification.textContent = message;
     copyNotification.classList.remove('hidden');
     
-    // Позиционируем уведомление по центру
+    // Position notification in the center
     copyNotification.style.top = '50%';
     copyNotification.style.left = '50%';
     
-    // Скрываем уведомление через задержку
+    // Hide notification after delay
     setTimeout(() => {
         copyNotification.classList.add('hidden');
     }, 1500);

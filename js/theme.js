@@ -1,4 +1,4 @@
-// Функции для управления темой
+// Functions for theme management
 function setTheme(theme) {
     document.body.setAttribute('data-theme', theme);
     localStorage.setItem('theme', theme);

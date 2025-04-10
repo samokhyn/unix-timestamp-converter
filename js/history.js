@@ -1,11 +1,11 @@
-// Функции для работы с историей конвертаций
+// Functions for working with conversion history
 
 const HISTORY_KEY = 'unix_converter_history';
-const MAX_HISTORY_ITEMS = 3; // Ограничиваем до 3 конвертаций
+const MAX_HISTORY_ITEMS = 3; // Limit to 3 conversions
 
 /**
- * Получение истории конвертаций из localStorage
- * @returns {Array} Массив объектов с историей конвертаций
+ * Get conversion history from localStorage
+ * @returns {Array} Array of objects with conversion history
  */
 export function getConversionHistory() {
     const historyJson = localStorage.getItem(HISTORY_KEY);
@@ -13,47 +13,47 @@ export function getConversionHistory() {
 }
 
 /**
- * Добавление новой записи в историю конвертаций
- * @param {Object} conversionData Объект с данными о конвертации
+ * Add new record to conversion history
+ * @param {Object} conversionData Object with conversion data
  */
 export function addToHistory(conversionData) {
     const history = getConversionHistory();
     
-    // Проверяем, есть ли уже такая запись в истории
+    // Check if such record already exists in history
     const existingIndex = history.findIndex(item => 
         item.timestamp === conversionData.timestamp && 
         item.date === conversionData.date
     );
     
-    // Если такая запись уже есть, удаляем её
+    // If such record already exists, remove it
     if (existingIndex !== -1) {
         history.splice(existingIndex, 1);
     }
     
-    // Добавляем новую запись в начало массива
+    // Add new record to the beginning of the array
     history.unshift({
         ...conversionData,
-        id: Date.now(), // Уникальный ID для записи
-        createdAt: new Date().toISOString() // Время создания записи
+        id: Date.now(), // Unique ID for the record
+        createdAt: new Date().toISOString() // Creation time of the record
     });
     
-    // Ограничиваем количество записей в истории
+    // Limit history to maximum number of records
     if (history.length > MAX_HISTORY_ITEMS) {
         history.pop();
     }
     
-    // Сохраняем обновленную историю
+    // Save updated history
     localStorage.setItem(HISTORY_KEY, JSON.stringify(history));
 }
 
 /**
- * Отображение истории конвертаций в списке
- * @param {HTMLElement} historyList Элемент списка истории
+ * Display conversion history in list
+ * @param {HTMLElement} historyList History list element
  */
 export function renderHistory(historyList) {
     const history = getConversionHistory();
     
-    // Очищаем список
+    // Clear history list
     historyList.innerHTML = '';
     
     if (history.length === 0) {
@@ -64,7 +64,7 @@ export function renderHistory(historyList) {
         return;
     }
     
-    // Добавляем каждую запись в список (максимум 3)
+    // Add each record to the list (maximum 3)
     history.slice(0, MAX_HISTORY_ITEMS).forEach(item => {
         const listItem = document.createElement('li');
         listItem.className = 'history-item';

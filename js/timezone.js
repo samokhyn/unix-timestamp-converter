@@ -1,14 +1,14 @@
-// Функции для работы с часовыми поясами
+// Functions for working with timezones
 function getSelectedTimezone(timezoneSelect) {
-    return timezoneSelect.value; // Все значения в формате +/-XX:XX
+    return timezoneSelect.value; // All values in format +/-XX:XX
 }
 
-// Функция для управления состоянием 3-позиционного переключателя
+// Function for managing the state of the 3-position toggle
 function setTimezoneToggle(position, timezoneToggle, utcBtn, localBtn, customBtn, timezoneSelect, updateCallback) {
-    // Обновляем атрибут data-position для позиционирования слайдера
+    // Update data-position attribute for slider positioning
     timezoneToggle.setAttribute('data-position', position);
     
-    // Обновляем ARIA-атрибуты для доступности
+    // Update ARIA attributes for accessibility
     utcBtn.setAttribute('aria-checked', position === 'utc');
     localBtn.setAttribute('aria-checked', position === 'local');
     customBtn.setAttribute('aria-checked', position === 'custom');
@@ -45,7 +45,7 @@ function setTimezoneToggle(position, timezoneToggle, utcBtn, localBtn, customBtn
     }
 }
 
-// Функция для обработки изменения часового пояса в селекте
+// Function for handling timezone change in select
 function handleTimezoneChange(timezoneSelect, timezoneToggle, utcBtn, localBtn, customBtn, updateCallback, dateTimeFields) {
     const selectedOption = timezoneSelect.value;
     
@@ -78,7 +78,7 @@ function handleTimezoneChange(timezoneSelect, timezoneToggle, utcBtn, localBtn, 
     }
 }
 
-// Получаем смещение часового пояса из строки формата "+01:00" или "-07:00"
+// Get timezone offset from string in format "+01:00" or "-07:00"
 function getOffsetMillisFromString(offsetStr) {
     const offsetMatch = offsetStr.match(/([+-])(\d{2}):(\d{2})/);
     if (offsetMatch) {
@@ -90,7 +90,7 @@ function getOffsetMillisFromString(offsetStr) {
     return 0;
 }
 
-// Получаем локальный часовой пояс в формате "+01:00" или "-07:00"
+// Get local timezone in format "+01:00" or "-07:00"
 function getLocalTimezoneOffset() {
     const date = new Date();
     const offsetMinutes = date.getTimezoneOffset();
