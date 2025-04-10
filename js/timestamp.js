@@ -1,6 +1,5 @@
 // Функции для работы с временными метками
-import { getSelectedTimezone, getOffsetMillisFromString } from './timezone.js';
-
+import domElements from './dom.js';
 // Function to format date according to the selected format for live preview
 export function formatDateForPreview(date, timezone, dateFormatSelect) {
     let formattedDate;
@@ -205,11 +204,7 @@ function setCurrentTime(timestampInput, timestampFormatSelect, updateCallback) {
         updateCallback();
     }
     
-    // Подсвечиваем поле временной метки
-    timestampInput.classList.add('highlight-change');
-    setTimeout(() => {
-        timestampInput.classList.remove('highlight-change');
-    }, 500);
+    domElements.timestampInput.classList.add('highlight-change');
 }
 
 // Handle timestamp format change (seconds/milliseconds)
