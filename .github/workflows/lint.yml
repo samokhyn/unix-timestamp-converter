@@ -1,0 +1,39 @@
+name: Lint
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  eslint:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Use Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '16.x'
+    - name: Install dependencies
+      run: |
+        npm init -y
+        npm install eslint --save-dev
+        npm install eslint-config-standard --save-dev
+    - name: Create ESLint config if not exists
+      run: |
+        if [ ! -f .eslintrc.json ]; then
+          echo '{
+            "extends": "standard",
+            "env": {
+              "browser": true,
+              "es2021": true
+            },
+            "parserOptions": {
+              "ecmaVersion": "latest",
+              "sourceType": "module"
+            }
+          }' > .eslintrc.json
+        fi
+    - name: Run ESLint
+      run: npx eslint js/ --ext .js

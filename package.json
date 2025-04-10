@@ -1,0 +1,35 @@
+{
+  "name": "unix-timestamp-converter",
+  "version": "1.0.0",
+  "description": "A Chrome extension for quick and convenient Unix timestamp conversions",
+  "author": "Maksim Samokhin <samokhyn@gmail.com>",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "lint": "eslint js/ --ext .js",
+    "lint:fix": "eslint js/ --ext .js --fix",
+    "generate-icons": "node tools/generate_icons.js"
+  },
+  "devDependencies": {
+    "canvas": "^3.1.0",
+    "eslint": "^8.38.0",
+    "eslint-config-standard": "^17.0.0",
+    "eslint-plugin-import": "^2.27.5",
+    "eslint-plugin-n": "^15.7.0",
+    "eslint-plugin-promise": "^6.1.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/maksimsamokhin/unix-timestamp-converter.git"
+  },
+  "bugs": {
+    "url": "https://github.com/maksimsamokhin/unix-timestamp-converter/issues"
+  },
+  "homepage": "https://github.com/maksimsamokhin/unix-timestamp-converter#readme",
+  "keywords": [
+    "chrome-extension",
+    "unix-timestamp",
+    "date-converter",
+    "developer-tools"
+  ]
+}

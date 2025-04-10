@@ -1,0 +1,68 @@
+/* Dark theme */
+[data-theme="dark"] {
+    --primary-color: #6366f1;
+    --primary-hover: #818cf8;
+    --primary-light: rgba(99, 102, 241, 0.15);
+    
+    --accent-color: #3b82f6;
+    --accent-hover: #60a5fa;
+    --accent-text: #ffffff;
+    
+    --bg-color: #1f2937;
+    --field-bg: #111827;
+    --popup-bg: #111827;
+    --button-bg: #1f2937;
+    --button-hover-bg: #374151;
+    --hover-bg: #2d3748;
+    
+    --border-color: #374151;
+    --border-focus: #6366f1;
+    
+    --text-color: #f9fafb;
+    --text-muted: #d1d5db;
+    --text-light: #9ca3af;
+    
+    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.2);
+    --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.25);
+}
+
+/* Theme toggle styles */
+.theme-toggle {
+    display: flex;
+    align-items: center;
+    margin-left: 12px;
+}
+
+.theme-toggle button {
+    background: none;
+    border: none;
+    color: var(--text-color);
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: var(--transition);
+}
+
+.theme-toggle button:hover {
+    background-color: var(--button-hover-bg);
+}
+
+/* Light/dark icons visibility */
+[data-theme="light"] #dark-icon {
+    display: block;
+}
+
+[data-theme="light"] #light-icon {
+    display: none;
+}
+
+[data-theme="dark"] #dark-icon {
+    display: none;
+}
+
+[data-theme="dark"] #light-icon {
+    display: block;
+}
